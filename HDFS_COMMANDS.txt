@@ -1,0 +1,42 @@
+HDFS SHELL COMMANDS
+
+1)mkdir:
+To make a directory
+bin/hadoop dfs -mkdir /datagen
+
+2)Copy from Local:
+Copy your source file to hdfs 
+bin/hadoop dfs -copyFromLocal /home/ec2-user/data_10.txt /sample.txt
+
+3)ls:
+List all directories 
+bin/hadoop dfs -ls /
+
+4)lsr:
+Recursive version of ls
+bin/hadoop dfs -lsr /
+
+5)Copt to Local:
+Copy your hdfs file to your local system
+bin/hadoop dfs -copyToLocal /sample.txt /home/ec2-user/data_10.txt
+
+6)cp:
+Copy files from source to destination in hdfs
+bin/hadoop dfs -cp /sample.txt /data_10.txt 
+
+7)mv:
+Moves files from source to destination in hdfs
+bin/hadoop dfs -mv /sample.txt / sample2.txt
+
+8)rm:
+Only deletes files
+bin/hadoop dfs -rm /sample.txt
+
+9)rmr:
+Recursive version of delete. The rmr command recursively deletes the directory and any 
+content under it
+bin/hadoop dfs -rm /datagen
+
+10)tail:
+Displays last kilobyte of the file
+bin/hadoop dfs -tail /sample.txt

@@ -1,0 +1,183 @@
+Internal Table 
+
+create table patient(pid INT, pname STRING, drug STRING,gender STRING, 
+tot_amt INT) row format delimited fields terminated by ',' stored as textfile;
+
+show tables;
+
+load data inpath '/data10.txt' into table patient;
+
+load data local inpath '/home/psgr/datagen_10.txt' into table patient;
+
+select * from patient;
+
+desc patient;
+
+desc extended patient;
+
+drop table patient;
+
+#### Now Check the HDFS Path of Hive Table 
+
+
+
+External Table 
+
+create EXTERNAL table patient_external(pid INT, pname STRING, drug 
+STRING,gender STRING,tot_amt INT) row format delimited fields terminated by 
+',' stored as textfile LOCATION '/patient_external';
+
+load data local inpath '/home/psgr/datagen_10.txt' into table patient_external;
+
+drop table patient_external;
+
+#### Now Check the HDFS Path of Hive Table 
+
+
+Partition 
+
+
+Static 
+
+create table patient_partition_1(pid INT, pname STRING, drug STRING,gender
+STRING,tot_amt INT)partitioned by(country STRING)row format delimited fields 
+terminated by ',' stored as textfile;
+
+desc patient_partition_1;
+
+LOAD DATA LOCAL INPATH '/home/username/Desktop/patient_file.txt' INTO 
+TABLE patient_partition_1 PARTITION (country='IND')
+
+Select * from patient_partition_1;
+
+Dynamic 
+
+set hive.exec.dynamic.partition=true;    
+set hive.exec.dynamic.partition.mode=nonstrict;  
+
+
+create table patient_dynamic_partition (pid INT, pname STRING, drug STRING,gender
+STRING,tot_amt INT)   
+partitioned by (drug string)  
+row format delimited  
+fields terminated by ',';  
+
+
+create table patient_nopart(pid INT, pname STRING, drug STRING,gender STRING, 
+tot_amt INT,country STRING) row format delimited fields terminated by ',' stored as textfile;
+
+insert into patient_nopart values (1,'a','avil','male',100,'IND');
+insert into patient_nopart values (2,'b','para','male',100,'USA');
+insert into patient_nopart values (3,'c','avil','female',100,'IND');
+insert into patient_nopart values (4,'d','meta','male',100,'USA');
+insert into patient_nopart values (5,'e','avil','female',100,'IND');
+
+
+
+insert into patient_dynamic_partition  
+partition(country)  
+select pid, pname, drug, gender, tot_amt  , country
+from patient_nopart;  
+
+
+Bucket 
+
+hive.enforce.bucketing = true;
+
+CREATE TABLE bucketed_patient (pid INT, pname STRING, drug STRING,genter
+STRING, tot_amt INT) CLUSTERED BY (pid) INTO 4 BUCKETS;
+
+create table patient(pid INT, pname STRING, drug STRING,gender STRING, 
+tot_amt INT) row format delimited fields terminated by ',' stored as textfile;
+
+load data local inpath '/home/psgr/datagen_10.txt' into table patient;
+
+INSERT OVERWRITE TABLE bucketed_patient SELECT * FROM patient;
+
+
+JOIN
+
+Table 1 
+
+CREATE TABLE employees (
+    employee_id INT,
+    name STRING,
+    department_id INT
+);
+
+INSERT INTO employees VALUES (1, 'Alice', 101);
+INSERT INTO employees VALUES (2, 'Bob', 102);
+INSERT INTO employees VALUES (3, 'Charlie', 103);
+INSERT INTO employees VALUES (4, 'David', NULL);  -- No department assigned
+
+
+Table 2 
+
+Departments Table
+ 
+CREATE TABLE departments (
+    department_id INT,
+    department_name STRING
+);
+
+INSERT INTO departments VALUES (101, 'HR');
+INSERT INTO departments VALUES (102, 'Finance');
+INSERT INTO departments VALUES (103, 'IT');
+INSERT INTO departments VALUES (104, 'Marketing');
+
+Left 
+SELECT 
+    e.employee_id,
+    e.name,
+    d.department_id,
+    d.department_name
+FROM 
+    employees e 
+LEFT JOIN 
+    departments d 
+ON 
+    e.department_id = d.department_id;
+
+Full Outer Join
+
+SELECT 
+    e.employee_id,
+    e.name,
+    d.department_id,
+    d.department_name
+FROM 
+    employees e 
+FULL OUTER JOIN 
+    departments d 
+ON 
+    e.department_id = d.department_id;
+
+
+Right Join
+
+SELECT 
+    e.employee_id,
+    e.name,
+    d.department_id,
+    d.department_name
+FROM 
+    employees e 
+RIGHT OUTER JOIN 
+    departments d 
+ON 
+    e.department_id = d.department_id;
+
+# try create table as (CTAS)
+
+
+
+
+Agg Functions
+
+show functions;
+
+select min(tot_amt) from patient;
+select upper (pname) from patient;
+
+
+
