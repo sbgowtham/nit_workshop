@@ -1,0 +1,4 @@
+https://www.puttygen.com/download-putty
+https://archive.apache.org/dist/hadoop/common/hadoop-2.9.1/hadoop-2.9.1.tar.gz.asc
+ssh -i workshop.ppk -N -L 50070:127.0.01:50070 ubuntu@ec2-52-91-128-223.compute-1.amazonaws.com
+https://archive.apache.org/dist/hive/hive-2.3.0/
